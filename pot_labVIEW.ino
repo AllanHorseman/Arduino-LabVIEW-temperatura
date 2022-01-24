@@ -10,6 +10,7 @@ float temp;
 
 void setup() {
   Serial.begin(9600);
+  lcd.begin(16,2);
   pinMode(relay, OUTPUT);
 }
 
@@ -25,5 +26,11 @@ void loop() {
       {digitalWrite(relay,HIGH);}
     if(var=='b')
       {digitalWrite(relay,LOW);}
+
+    lcd.print("Temp Ref: ");     //Muestra en LCD Temperatura//
+    lcd.print (ref);
+    lcd.setCursor(0,1);        // Cambia de renglon en el LCD//
+    lcd.print("Temp:");     //Muestra en LCD Temperatura//
+    lcd.print(temp);
   }
 }
