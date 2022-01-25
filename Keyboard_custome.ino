@@ -11,6 +11,9 @@
 
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //four columns
+char wawa[7];
+int i = 0;
+
 //define the cymbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
   {'1','2','3','A'},
@@ -32,6 +35,15 @@ void loop(){
   char customKey = customKeypad.getKey();
   
   if (customKey){
-    Serial.println(customKey);
+    wawa[i] = customKey;
+    Serial.println(wawa);
+    i++;
+
+    if(i==6){
+      i = 0;
+      for(int j = 0; j<7; j++){
+        wawa[j] = '\0';        
+      }
+    }
   }
 }
