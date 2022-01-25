@@ -14,6 +14,7 @@ const byte COLS = 4; //four columns
 char wawa[7];
 int i = 0;
 float ref;
+bool cambio = true;
 
 //define the cymbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = {
@@ -33,32 +34,40 @@ void setup(){
 }
   
 void loop(){
+  cambio = true;
   char customKey = customKeypad.getKey();
+
+  if(customKey == 'C'){
+    Serial.println("Introducir nuevo setpoint: ");
   
-  if (customKey){
-    if(customKey != 'A'){
-      wawa[i] = customKey;
-      Serial.println(wawa);
-      i++;
-    }
-  }
+    while(cambio){
+      customKey = customKeypad.getKey();
+      if (customKey){
+        if(customKey != 'A' and customKey != 'C'){
+          wawa[i] = customKey;
+          Serial.println(wawa);
+          i++;
+        }
+      }
 
-  if(i == 6 or customKey == 'A'){
-    i = 0;
-    ref = atof(wawa);
+      if(i == 6 or customKey == 'A'){
+        i = 0;
+        ref = atof(wawa);
+        cambio = false;
 
-    if(ref<-50.00 or ref>150.00){
-      Serial.println("Fuera de escala!");
-    }
+        if(ref<-50.00 or ref>150.00){
+          Serial.println("Fuera de escala!");
+        }
 
-    else{
-      Serial.print("Nuevo setpoint: ");
-      Serial.println(ref);
-      //Serial.println(ref); 
-    }
+        else{
+          Serial.print("Nuevo setpoint: ");
+          Serial.println(ref);
+        }
     
-    for(int j = 0; j<7; j++){
-      wawa[j] = '\0';        
+        for(int j = 0; j<7; j++){
+          wawa[j] = '\0';
+        }
+      }
     }
   }
 }
