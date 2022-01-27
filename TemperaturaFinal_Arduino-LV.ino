@@ -48,8 +48,9 @@ char wawa[7];           //Array donde se almacenarán los caracteres que
 int i = 0;              //Índice para el Array       
 float setpoint = 50.00; //Valor incial del setpoint
 
-bool cambio = true;     //Variable que determina si se está modificando
-                        //el setpoint o no
+bool cambio = true, cambiado = true; //Variables que indican si se está
+                                      //modificando el setpoint (cambio)
+                                      //o se modificó (cambiado)
 
 //definición de los símbolos de los botones del Keypad
 char hexaKeys[ROWS][COLS] = {
@@ -73,7 +74,7 @@ unsigned long ahora = 0;
 float temp;
 
 void labview() {
-  Serial.println(temp); //Imprimir la temperatura en interfaz de LabVIEW
+  Serial.println(temp); //Imprimir la temperatura en interfaz de LabVIEW 
   lab = Serial.read();  //Leer estado del interruptor virtual de LabVIEW
 
   if(lab=='a')
@@ -143,6 +144,8 @@ void newSetpoint(){
       for(int j = 0; j<7; j++){ //Se limpia el array wawa asignando espacios vacíos a todas sus posiciones
         wawa[j] = '\0';
       }
+
+      cambiado = true;
     }
   }
 }
@@ -171,7 +174,16 @@ void loop() {
                              //y del sensor (150°C/5V)
 
   if(Serial.available()){  //Si hay conexión en comunicación serial...
-    labview();   //Llamar a la función "labview"
+    if(cambiado){          //Si se cambió el setpoint...
+      Serial.println("NSP"+String(setpoint)); //Mensaje que le indica
+                                              //a LabVIEW que se ha cambiado
+                                              //el setpoint y el valor del
+                                              //nuevo setpoint
+      cambiado = false;
+    }
+    else{
+      labview();   //Llamar a la función "labview"
+    }
   }
 
   if(customKey == 'C'){    //Si se presionó la tecla 'C'...
